@@ -1,0 +1,63 @@
+#!/bin/bash
+
+####################################
+# NOTE:  place this file at the BASE of the project
+#        you wish to test (ex: inside build/)
+#
+# NOTE:  run me as: ./python_tests
+####################################
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ) # directory of this script
+
+####################################
+
+if [ $# -ne 0 ]; then
+    echo '[ ] running tests...'
+fi
+
+#### (help message)
+if [ $# -eq 0 ]; then
+    echo '####################################'
+    echo '# REQUIRES: pylint and/or vulture (via pip)'
+    echo '#'
+    echo '#   = help (this)'
+    echo '#'
+    echo '# 1 = pylint all'
+    echo '# 2 = pylint reduced'
+    echo '# 3 = pylint errors only'
+    echo '# '
+    echo '# 4 = vulture'
+    echo '####################################'
+fi
+
+#### pylint ALL
+if [ $# -eq 1 ] && [ $1 -eq 1 ]; then
+    echo '--- pylint ALL ---'
+    pylint $DIR
+fi
+
+#### pylint REDUCED
+if [ $# -eq 1 ] && [ $1 -eq 2 ]; then
+    echo '--- pylint REDUCED ---'
+    pylint $DIR \
+        --disable=bad-whitespace \
+        --disable=line-too-long \
+        --disable=trailing-whitespace \
+        --disable=logging-format-interpolation
+fi
+
+#### pylint ERRORS ONLY
+if [ $# -eq 1 ] && [ $1 -eq 3 ]; then
+    echo '--- pylint ERRORS ONLY ---'
+    pylint $DIR -E
+fi
+
+#### vulture
+if [ $# -eq 1 ] && [ $1 -eq 4 ]; then
+    echo '--- vulture ---'
+    vulture $DIR
+fi
+
+if [ $# -ne 0 ]; then
+    echo '[+] done.'
+fi
